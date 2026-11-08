@@ -1,0 +1,104 @@
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap");
+
+:root {
+  --color-1: #141414;
+  --color-2: #1a1a1a;
+  --color-3: #f4f4f5;
+  --color-4: #f0501e;
+  --color-5: #f0501e;
+  --color-6: #f87171;
+  --color-7: #3ecf8e;
+  --color-8: #f5b544;
+  --color-9: #1c1c1c;
+  --color-10: #26262a;
+  --color-11: #17100b;
+  --color-12: #a1a1aa;
+  --color-13: #ffffff17;
+  --color-14: #ffffff24;
+  --color-15: #fafafa;
+  --color-16: #c4c4c8;
+
+  --font-1: "Sora", sans-serif;
+  --font-2: "Manrope", system-ui, sans-serif;
+
+  --radius: 0.5rem;
+
+  --background: var(--color-1);
+  --foreground: var(--color-3);
+  --surface: var(--color-9);
+  --surface-elevated: var(--color-10);
+  --card: var(--color-2);
+  --card-foreground: var(--color-3);
+  --popover: var(--color-2);
+  --popover-foreground: var(--color-3);
+  --primary: var(--color-4);
+  --primary-foreground: var(--color-11);
+  --secondary: var(--color-10);
+  --secondary-foreground: var(--color-3);
+  --muted: var(--color-10);
+  --muted-foreground: var(--color-12);
+  --accent: var(--color-5);
+  --accent-foreground: var(--color-11);
+  --destructive: var(--color-6);
+  --destructive-foreground: var(--color-11);
+  --success: var(--color-7);
+  --success-foreground: var(--color-11);
+  --warning: var(--color-8);
+  --warning-foreground: var(--color-11);
+  --border: var(--color-13);
+  --input: var(--color-14);
+  --ring: var(--color-4);
+
+  --on-image: var(--color-15);
+  --on-image-muted: var(--color-16);
+
+  --font-display: var(--font-1);
+  --font-sans: var(--font-2);
+
+  --display-h1-font-family: var(--font-display);
+  --display-h1-size: clamp(2.5rem, 6vw, 4.5rem);
+  --display-h1-weight: 700;
+  --display-h1-tracking: -0.02em;
+  --display-h1-leading: 1.1;
+  --display-h2-font-family: var(--font-display);
+  --display-h2-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  --display-h2-weight: 500;
+  --display-h2-tracking: -0.01em;
+  --display-h2-leading: 1.2;
+  --display-h3-font-family: var(--font-display);
+  --display-h3-size: 1.25rem;
+  --display-h3-weight: 500;
+  --display-h3-tracking: -0.005em;
+  --display-h3-leading: 1.3;
+  --display-h4-font-family: var(--font-display);
+  --display-h4-size: 1rem;
+  --display-h4-weight: 500;
+  --display-h4-tracking: 0;
+  --display-h4-leading: 1.4;
+
+  --btn-radius: calc(var(--radius) - 2px);
+  --btn-h: 2.25rem;
+  --btn-px: 1rem;
+  --btn-fs: 0.875rem;
+  --btn-leading: calc(1.25 / 0.875);
+  --btn-weight: 500;
+  --btn-tracking: 0;
+  --btn-bg: var(--primary);
+  --btn-fg: var(--primary-foreground);
+  --btn-hover-bg: color-mix(in oklab, var(--btn-bg) 90%, transparent);
+  --btn-hover-bg-secondary: color-mix(in oklab, var(--secondary) 80%, transparent);
+
+  --badge-radius: calc(var(--radius) * 0.6);
+  --badge-px: 0.5rem;
+  --badge-fs: 0.75rem;
+  --badge-leading: calc(1 / 0.75);
+  --badge-weight: 500;
+  --badge-tracking: 0;
+
+  --card-radius: calc(var(--radius) * 1.2);
+  --card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+
+  --input-h: 2.25rem;
+  --input-radius: calc(var(--radius) - 2px);
+  --input-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
