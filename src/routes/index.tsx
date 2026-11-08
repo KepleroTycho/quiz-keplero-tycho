@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Timer, Trophy, Check, X, Telescope } from "lucide-react";
 import { questions } from "@/data/questions";
-import { getLeaderboard, submitScore } from "@/services/quiz";
+import { getLeaderboard, submitScore, type Entry, type SubmitResult } from "@/services/quiz";
 import { cn } from "@/lib/cn";
 
 function fmt(s: number) {
@@ -13,14 +13,14 @@ function fmt(s: number) {
 type Phase = "start" | "play" | "end";
 
 export function HomePage() {
-  const [board, setBoard] = useState(() => getLeaderboard());
+  const [board, setBoard] = useState<Entry[]>([]);
   const [phase, setPhase] = useState<Phase>("start");
   const [nick, setNick] = useState("");
   const [idx, setIdx] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
   const [picked, setPicked] = useState<number | null>(null);
   const [elapsed, setElapsed] = useState(0);
-  const [result, setResult] = useState<{ id: number; score: number; rank: number; total: number } | null>(null);
+  const [result, setResult] = useState<SubmitResult | null>(null);
   const [error, setError] = useState("");
   const startRef = useRef(0);
 
@@ -29,6 +29,14 @@ export function HomePage() {
     const t = setInterval(() => setElapsed((Date.now() - startRef.current) / 1000), 100);
     return () => clearInterval(t);
   }, [phase]);
+
+  // Carica la classifica all'apertura e la aggiorna ogni 30 secondi.
+  useEffect(() => {
+    const load = () => getLeaderboard().then(setBoard).catch(() => {});
+    load();
+    const t = setInterval(load, 30000);
+    return () => clearInterval(t);
+  }, []);
 
   function start() {
     if (!nick.trim()) {
@@ -45,14 +53,14 @@ export function HomePage() {
     setPhase("play");
   }
 
-  function finish(all: number[]) {
+  async function finish(all: number[]) {
     const seconds = (Date.now() - startRef.current) / 1000;
     setElapsed(seconds);
     setPhase("end");
     setError("");
     try {
-      setResult(submitScore({ nickname: nick.trim(), seconds, answers: all }));
-      setBoard(getLeaderboard());
+      setResult(await submitScore({ nickname: nick.trim(), seconds, answers: all }));
+      setBoard(await getLeaderboard());
     } catch {
       setError("Non siamo riusciti a salvare il risultato in classifica.");
     }
@@ -68,7 +76,7 @@ export function HomePage() {
     const all = [...answers, picked];
     setAnswers(all);
     setPicked(null);
-    if (idx + 1 >= questions.length) finish(all);
+    if (idx + 1 >= questions.length) void finish(all);
     else setIdx(idx + 1);
   }
 

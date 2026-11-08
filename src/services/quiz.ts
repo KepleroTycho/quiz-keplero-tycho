@@ -1,34 +1,22 @@
 import { questions } from "@/data/questions";
 
-export type Entry = { id: number; nickname: string; score: number; seconds: number };
+export type Entry = { id: string; nickname: string; score: number; seconds: number };
+export type SubmitResult = { id: string; score: number; rank: number; total: number };
 
-// Classifica salvata nel browser di chi gioca (localStorage): nessun server necessario.
-const KEY = "quiz-keplero-tycho:scores";
-
-function load(): Entry[] {
-  try {
-    const parsed = JSON.parse(localStorage.getItem(KEY) ?? "[]");
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
+// La classifica sta in un database condiviso (Upstash Redis), raggiunto tramite /api/leaderboard su Vercel.
+export async function getLeaderboard(): Promise<Entry[]> {
+  const res = await fetch("/api/leaderboard");
+  if (!res.ok) throw new Error("leaderboard");
+  return res.json();
 }
 
-function sorted(list: Entry[]): Entry[] {
-  return [...list].sort((a, b) => b.score - a.score || a.seconds - b.seconds || a.id - b.id);
-}
-
-export function getLeaderboard(limit = 10): Entry[] {
-  return sorted(load()).slice(0, limit);
-}
-
-export function submitScore(input: { nickname: string; seconds: number; answers: number[] }) {
+export async function submitScore(input: { nickname: string; seconds: number; answers: number[] }): Promise<SubmitResult> {
   const score = input.answers.reduce((n, a, i) => n + (a === questions[i].answer ? 1 : 0), 0);
-  const seconds = Math.round(input.seconds * 10) / 10;
-  const all = load();
-  const id = all.reduce((m, r) => Math.max(m, r.id), 0) + 1;
-  const better = all.filter((r) => r.score > score || (r.score === score && r.seconds < seconds)).length;
-  const next = [...all, { id, nickname: input.nickname.slice(0, 20), score, seconds }];
-  localStorage.setItem(KEY, JSON.stringify(sorted(next).slice(0, 200)));
-  return { id, score, rank: better + 1, total: next.length };
+  const res = await fetch("/api/leaderboard", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ nickname: input.nickname, seconds: input.seconds, score }),
+  });
+  if (!res.ok) throw new Error("submit");
+  return res.json();
 }
